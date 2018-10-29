@@ -1,0 +1,3 @@
+[submodule "backend/calories/templates"]
+	path = backend/calories/templates
+	url = git@gitlab.com:gerrys_club/frontend.git

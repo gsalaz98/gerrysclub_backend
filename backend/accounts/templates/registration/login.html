@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <div class="login">
+            <form action="." method="post">
+            {% csrf_token %}
+            {% for user_form in form %}
+                <div class="login_form">
+                    {{ user_form.label_tag }}{{ user_form }}
+                </div>
+            {% endfor %}
+            <input type="submit" value="Login" />
+            </form>
+        </div>
+    </body>
+</html>

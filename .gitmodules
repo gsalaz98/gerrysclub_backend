@@ -1,3 +1,7 @@
-[submodule "backend/calories/templates"]
-	path = backend/calories/templates
+[submodule "backend/frontend"]
+	path = backend/frontend
+	url = git@gitlab.com:gerrys_club/frontend.git
+
+[submodule "backend/frontend/templates"]
+	path = backend/frontend/templates
 	url = git@gitlab.com:gerrys_club/frontend.git

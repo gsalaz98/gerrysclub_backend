@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            function toggleVisibility(element, openClick) {
+                if (openClick) {
+                    element.style.visibility = "initial";
+                } else {
+                    element.style.visibility = "hidden";
+                }
+            }
+            function toggleDisplay(element, openClick, displayType) {
+                if (openClick) {
+                    element.style.display = displayType; 
+                } else {
+                    element.style.display = "none";
+                }
+            }
+
+            window.addEventListener("DOMContentLoaded", function() {
+                var burger = document.getElementsByClassName("hamburger-container")[0];
+                var dropdownNav = document.getElementsByClassName("dropdown-nav")[0];
+                
+                var burgerClick = false;
+                var dropdownNavClick = false;
+
+                burger.addEventListener("click", function() {
+                    burgerClick = !burgerClick;
+                    toggleVisibility(dropdownNav, burgerClick);
+                });
+                
+                dropdownNav.addEventListener("click", function() {
+                    burgerClick = !burgerClick;
+                    toggleVisibility(dropdownNav, burgerClick);
+                });
+
+                {% block header_js_dom_loaded %}{% endblock %}
+            }, false);
+            {% block header_js %}{% endblock %}
+        </script>
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto:400,700" rel="stylesheet">
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        <div class="header">
+            <button class="hamburger-container">
+                <div class="hamburger"></div>
+                <div class="hamburger"></div>
+                <div class="hamburger"></div>
+            </button>
+            <div class="navbar {% if not user.is_authenticated %}right{% endif %}">
+                {% if user.is_authenticated %}
+                <a class="element" href="/">Dashboard</a>
+                <a class="element" href="/counter/">Counter</a>
+                <a class="element" href="/feed/">Feed</a>
+                <a class="element" href="/forecast/">Forecast</a>
+                <a class="element" href="/supporters/">Supporters</a>
+                <a class="element" href="/sponsor/">Sponsor</a>
+            </div>
+            <div class="navbar right">
+                <a class="element" href="/accounts/">Account</a>
+                <a class="element" href="/accounts/logout/">Logout</a>
+            </div>
+                {% else %}
+                <a class="element" href="/accounts/login/">Login</a>
+                <a class="element" href="/accounts/register/">Register</a>
+                {% endif %}
+            {% block header %}{% endblock %}
+        </div>
+        <div class="body-content">
+            <div class="dropdown-nav">
+                {% block dropdown_nav %}{% endblock %}
+            </div>
+            {% block app %}{% endblock %}
+        </div>
+    </body>
+</html>

@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from django.db.models import Count, Sum
+from django.db.models.functions import TruncDate
 
 from calories.models import Calories
 from calories.forms import CalorieForm
@@ -12,10 +14,15 @@ def calories(request):
     only the head of the calories where n = 10
     '''
     if request.method == 'GET':
-        user_calories = Calories.objects.filter(user=request.user).order_by('-id')[:10]
+        user_calories = Calories.objects.filter(user=request.user).order_by('-id')
+        user_calories_truncated = user_calories.annotate(calorie_day=TruncDate('ts'))\
+            .values('calorie_day')\
+            .order_by('-calorie_day')\
+            .annotate(calorie_sum=Sum('calories'))\
+            .values('calorie_day', 'calorie_sum')
 
         return render(request, 'calories.html', context={
-            'calories': user_calories,
+            'calories_daily': user_calories_truncated,
             'calorie_form': CalorieForm(label_suffix='', initial={
                 'food_name': None,
                 'calories': None,
@@ -30,6 +37,6 @@ def calories(request):
             form.save()
 
             return redirect('/counter/')
-    
+
     else:
         return Http404()

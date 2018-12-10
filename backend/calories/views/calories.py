@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from django.db.models import Count, Sum
+from django.db.models import Sum
 from django.db.models.functions import TruncDate
 
 from calories.models import Calories
 from calories.forms import CalorieForm
+
 
 @login_required
 def calories(request):
@@ -22,6 +23,7 @@ def calories(request):
             .values('calorie_day', 'calorie_sum')
 
         return render(request, 'calories.html', context={
+            'calories': user_calories,
             'calories_daily': user_calories_truncated,
             'calorie_form': CalorieForm(label_suffix='', initial={
                 'food_name': None,

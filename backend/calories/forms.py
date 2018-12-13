@@ -1,5 +1,5 @@
-from django.forms import ModelForm, TextInput
-from calories.models import Calories
+from django.forms import ModelForm, TextInput, CheckboxInput
+from calories.models import Calories, Weight
 
 class CalorieForm(ModelForm):
     class Meta:
@@ -7,6 +7,7 @@ class CalorieForm(ModelForm):
         fields = [
             'food_name',
             'calories',
+            'quantity',
             'servings',
             'calories_per_serving',
             'restaurant',
@@ -18,6 +19,7 @@ class CalorieForm(ModelForm):
         labels = {
             'food_name': 'Food Name',
             'calories': 'Calories (kcal)',
+            'quantity': 'Quantity',
             'servings': 'Servings',
             'calories_per_serving': 'Calories per Serving',
             'restaurant': 'Restaurant Name',
@@ -44,14 +46,68 @@ class CalorieForm(ModelForm):
             'weight_after',
         ]
 
+        widgets = {
+            'food_name': TextInput(attrs={
+                'placeholder': 'Enter Food Name',
+            }),
+            'calories': TextInput(attrs={
+                'placeholder': 'Enter Calories (kcal)',
+            }),
+            'quantity': TextInput(attrs={
+                'placeholder': 'Enter Quantity (optional)',
+                'class': 'optional',
+            }),
+            'servings': TextInput(attrs={
+                'placeholder': 'Enter Servings (optional)',
+                'class': 'optional'
+            }),
+            'calories_per_serving': TextInput(attrs={
+                'placeholder': 'Enter Calories per Serving (optional)',
+                'class': 'advanced'
+            }),
+            'restaurant': TextInput(attrs={
+                'placeholder': 'Enter Restaurant Name (optional)',
+                'class': 'advanced'
+            }),
+            'time_eaten': TextInput(attrs={
+                'placeholder': 'Enter Time Eaten At (optional)',
+                'class': 'advanced'
+            }),
+            'weight_before': TextInput(attrs={
+                'placeholder': 'Enter Weight Before (optional)',
+                'class': 'advanced'
+            }),
+            'weight_after': TextInput(attrs={
+                'placeholder': 'Enter Weight After (optional)',
+                'class': 'advanced'
+            })
+        }
 
-        widgets = dict({
-            k: TextInput(attrs={
-                'placeholder': 'Enter %s' % v
-            }) for k, v in labels.items()
-            }, **{
-                k: TextInput(attrs={
-                    'class': 'optional'
-                }) for k in optional
-            }
-        )
+
+class WeightForm(ModelForm):
+    class Meta:
+        model = Weight
+
+        fields = [
+            'weight',
+            'kg',
+            'food_eaten_before',
+            'food_weight'
+        ]
+
+        labels = {
+            'weight': 'Weight',
+            'food_weight': 'Food Weight',
+            'kg': 'Kilograms',
+            'food_eaten_before': 'Food Eaten Before Weigh-in',
+        }
+        widgets = {
+            'weight': TextInput(attrs={
+                'placeholder': 'Enter your weight'
+            }),
+            'food_weight': TextInput(attrs={
+                'placeholder': 'Enter food weight (optional)'
+            })
+        }
+
+    field_order = ['weight', 'food_weight', 'kg', 'food_eaten_before']

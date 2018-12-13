@@ -5,7 +5,7 @@ from django.db.models import Sum
 from django.db.models.functions import TruncDate
 
 from calories.models import Calories
-from calories.forms import CalorieForm
+from calories.forms import CalorieForm, WeightForm
 
 
 @login_required
@@ -29,11 +29,13 @@ def calories(request):
                 'food_name': None,
                 'calories': None,
             }),
+            'weight_form': WeightForm(label_suffix='')
         })
     elif request.method == 'POST':
         calorie_form = CalorieForm(request.POST)
 
         if calorie_form.is_valid():
+            calculate_calories(calorie_form)
             form = calorie_form.save(commit=False)
             form.user = request.user
             form.save()
@@ -42,3 +44,6 @@ def calories(request):
 
     else:
         return Http404()
+
+def calculate_calories(form):
+    print(form)
